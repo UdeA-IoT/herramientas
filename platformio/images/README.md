@@ -206,4 +206,179 @@ Finalmente, una vez llamado el monitor serial, se hace un reset del NodeMCU y se
 
  Cuando culmine la prueba con la combinación de letras ```CTRL + C``` puede salir del monitor serial. 
 
- 
+ ### Uso del wifi
+
+ El otro caso que es necesario analizar es la conexión por Wifi, esto debido al gran número de aplicaciones de IoT que se conectan inalámbricamente usando esta tecnología. Como en muchos casos, Wifi es una librería externa por lo que la clave, está en instalar y usar esta y otras librerías en el proyecto. Para más información puede consultar el enlace [Library Manager](https://docs.platformio.org/en/latest/librarymanager/index.html). 
+
+Para nuestro caso vamos a adaptar el ejemplo descrito en la segunda parte del tutorial: [Quick start with NodeMCU v3 (ESP8266), Arduino ecosystem and PlatformIO IDE](https://loginov-rocks.medium.com/quick-start-with-nodemcu-v3-esp8266-arduino-ecosystem-and-platformio-ide-b8415bf9a038). 
+
+Inicialmente, tal y como se ha realizado anteriormente, procedemos a crear un proyecto. El cual para el caso llamaremos **wifi-test**. Tal y como sucede inicialmente, el archivo **platformio.ini** tiene la siguiente configuración basica:
+
+![fig14](platformio15.jpg)
+
+Como nuestro proyecto va a hacer uso de Wifi, es necesario agregar esta librería, de modo que lo primero que se debe hacer es ir al gestor de librerías y descargarla. Para ello primero cargamos el home del platformio:
+
+![fig15](platformio16.jpg)
+
+Una vez aparezca el **home** se presiona el botón del gestor de librerías:
+
+![fig16](platformio17.jpg)
+
+Para buscar la librería vamos al gestor de librerías y en el campo para la búsqueda digitamos la librería o palabra clave de nuestro interés (cuadro amarillo). Como resultado aparecerá una lista de librerías, donde para nuestro caso procedimos a instalar la librería **WifiManager** tal y como se muestra en la siguiente figura:
+
+![fig17](platformio18.jpg)
+
+Para instalarla damos click en esta librería (cuadro naranja) lo que hace que como resultado aparezca la siguiente pestaña. De modo que para instalar la librería procedemos a dar click en el botón **Install**:
+
+![fig18](platformio19.jpg)
+
+Luego podemos verificar que la libreria está instalada dando click en la pestaña **Installed** tal y como se muestra a continuación: 
+
+![fig19](platformio20.jpg)
+
+El siguiente paso consiste en agregar la librería recién instalada en el archivo de configuración. Damos click en el nombre de la librería (**WifiManager**):
+
+![fig20](platformio21.jpg)
+
+Como se puede notar, aparecerá información relevante relacionada con esta librería la cual está desplegada a lo largo de las pestañas (examples, installation, etc). Como lo que deseamos es instalar esta librería para poder usar sus funciones en nuestro proyecto damos click en la pestaña **installation**:
+
+![fig21](platformio22.jpg)
+
+Una vez allí, se procede a copiar la parte relacionada con lib_deps en el archivo de configuración (**platformio.ini**):
+
+![fig22](platformio23.jpg)
+
+El archivo **platformio.ini** queda de la siguiente manera hasta el momento:
+
+```ini
+; PlatformIO Project Configuration File
+;
+;   Build options: build flags, source filter
+;   Upload options: custom upload port, speed and extra flags
+;   Library options: dependencies, extra library storages
+;   Advanced options: extra scripting
+;
+; Please visit documentation for the other options and examples
+; https://docs.platformio.org/page/projectconf.html
+
+[env:nodemcuv2]
+platform = espressif8266
+board = nodemcuv2
+framework = arduino
+
+lib_deps =
+  # Using a library name
+  WifiManager
+    
+  # ... or using library Id
+  567
+      
+  # ... or depend on a specific version
+  WifiManager@0.15.0
+    
+  # Semantic Versioning Rules
+  # http://docs.platformio.org/page/userguide/lib/cmd_install.html#description
+  WifiManager@^0.15.0
+  WifiManager@~0.15.0
+  WifiManager@>=0.15.0
+```
+
+Con lo anterior ya es posible usar las funciones propias de esta libreria, asi que procedemos a codificar nuestro código fuente ejemplo en el archivo ```main.cpp``` (no olvidar adaptar el **ssid** y el **password** de su red local): 
+
+```C
+#include <Arduino.h>
+#include <ESP8266WiFi.h>        // Include the Wi-Fi library
+#include <ESP8266WebServer.h>
+#include <DNSServer.h>
+
+const char* ssid     = "SSID";         // The SSID (name) of the Wi-Fi network you want to connect to
+const char* password = "PASSWORD";     // The password of the Wi-Fi network
+
+void setup() {
+  Serial.begin(115200);         // Start the Serial communication to send messages to the computer
+  delay(10);
+  Serial.println('\n');
+
+  WiFi.begin(ssid, password);             // Connect to the network
+  Serial.print("Connecting to ");
+  Serial.print(ssid); Serial.println(" ...");
+
+  int i = 0;
+  while (WiFi.status() != WL_CONNECTED) { // Wait for the Wi-Fi to connect
+    delay(1000);
+    Serial.print(++i); Serial.print(' ');
+  }
+  Serial.println('\n');
+  Serial.println("Connection established!");  
+  Serial.print("IP address:\t");
+  Serial.println(WiFi.localIP());         // Send the IP address of the ESP8266 to the computer
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+  
+}
+```
+
+Como se podrá notar, se está haciendo uso del monitor serial por lo que es necesario agregar en el archivo de configuración (**platformio.ini**) las líneas necesarias para configurar el monitor serial:
+
+```ini
+
+; PlatformIO Project Configuration File
+;
+;   Build options: build flags, source filter
+;   Upload options: custom upload port, speed and extra flags
+;   Library options: dependencies, extra library storages
+;   Advanced options: extra scripting
+;
+; Please visit documentation for the other options and examples
+; https://docs.platformio.org/page/projectconf.html
+
+[env:nodemcuv2]
+platform = espressif8266
+board = nodemcuv2
+framework = arduino
+
+lib_deps =
+  # Using a library name
+  WifiManager
+    
+  # ... or using library Id
+  567
+      
+  # ... or depend on a specific version
+  WifiManager@0.15.0
+    
+  # Semantic Versioning Rules
+  # http://docs.platformio.org/page/userguide/lib/cmd_install.html#description
+  WifiManager@^0.15.0
+  WifiManager@~0.15.0
+  WifiManager@>=0.15.0
+
+; Custom Serial Monitor port
+monitor_port = /dev/ttyUSB0
+
+; Custom Serial Monitor speed (baud rate)
+monitor_speed = 115200
+```
+
+Una vez hecho esto ya es posible verificar (```CTRL +ALT + b```) y subir el codigo (```CTRL +ALT + u```) de modo que si todo está bien aparecera algo como lo que se muestra en la siguiente figura:
+
+![fig23](platformio24.jpg)
+
+Finalmente se llama al monitor serial (```CTRL + ALT + s```) y se procede a dar un reset a la placa NodeMCU:
+
+![fig24](platformio25.jpg)
+
+Ya lo que resta es cacharrear y adaptar esto a su proyecto en cuestión.
+
+## Referencias
+
+1.	https://platformio.org/install
+2.	https://medium.com/@loginov_rocks/quick-start-with-nodemcu-v3-esp8266-arduino-ecosystem-and-platformio-ide-b8415bf9a038
+3.	https://openhomeautomation.net/getting-started-esp32
+4.	https://awesomeopensource.com/projects/esp32
+5.	https://www.youtube.com/watch?v=tQJiClU4Z3o
+6.	https://www.instructables.com/id/Quick-Start-to-Nodemcu-ESP8266-on-Arduino-IDE/ 
+
+
