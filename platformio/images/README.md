@@ -79,8 +79,131 @@ Así el código modificado quedará:
 
 La siguiente figura muestra como hacer el **upload** (```CTRL + ALT + u```):
 
+
 Si el proceso de upload (carga del programa en la plataforma) está bien, saldrá en la terminal algo como lo siguiente:
 
-![fig9](platformio10.jpg)
+![fig10](platformio11.jpg)
 
 5. Finalmente una vez cargado el programa, se verá el led titilando.
+
+
+
+## Casos de interes
+
+A continuación, se analizarán dos casos que son muy comunes en muchas de las aplicaciones que se harán a lo largo del curso:
+1.	Uso del puerto serial.
+2.	Uso del wifi.
+
+### Uso del puerto serial
+
+Para tratar este caso, partamos del siguiente problema. 
+
+**Problema**: Hacer una aplicación en arduino que permita prender y apagar el led integrado a la tarjeta NodeMCU mediante las instrucciones mostradas en la siguiente tabla: 
+
+|Comando|Efecto|
+|---|---|
+|```h```|Enciende el led|
+|```l```|Apaga el led|
+
+La codificación del procedimiento es similar a la realizada en el ejemplo anterior, pero, en este caso el código fuente a codificar se muestra a continuación, se muestra a continuación:
+
+```C
+#include <Arduino.h>
+
+#define LED 2   // Assign LED to pin GPIO2 (Built-in LED)
+
+byte comando;
+
+void setup() {
+  // initialize serial communication at 9600 bits per second:
+  Serial.begin(9600);
+  Serial.write("Configurando puerto serial a 9600bps\n");
+  // initialize digital pin LED as an output.
+  pinMode(LED, OUTPUT);
+}
+
+void loop() {
+  // check if data has been sent from the computer
+  if (Serial.available()) {
+    // read the most recent byte 
+    comando = Serial.read();
+    if(comando == 'h') {
+      digitalWrite(LED, HIGH);
+      Serial.write("Led encendido\n");
+    }
+    else if(comando == 'l') {
+      digitalWrite(LED, LOW);
+      Serial.write("Led apagado\n");
+    }
+  } 
+}
+```
+
+Es buena práctica que una vez codificado el código, este sea construido (```CTRL + ALT + b``` en linux) antes de que sea subido a la plataforma. 
+
+La importancia de este problema radica en que se va a hacer uso del puerto serial, por lo que es necesario agregar las líneas para configurar el puerto serial en el archivo **platformio.ini**. Inicialmente, es bueno verificar cual es el puerto serial al que quedó asignado el NodeMCU una vez que este fue conectado lo cual depende del sistema operativo ([link](https://la.mathworks.com/help/supportpkg/arduinoio/ug/find-arduino-port-on-windows-mac-and-linux.html)). 
+
+El puerto USB que aparezca al realizar la verificación, es aquel que está conectado el NodeMCU (supongamos que el resultado dio ttyUSB0). 
+
+Inicialmente si abrimos el archivo platformio.ini tendremos algo como lo siguiente:
+
+```ini
+; PlatformIO Project Configuration File
+;
+;   Build options: build flags, source filter
+;   Upload options: custom upload port, speed and extra flags
+;   Library options: dependencies, extra library storages
+;   Advanced options: extra scripting
+;
+; Please visit documentation for the other options and examples
+; https://docs.platformio.org/page/projectconf.html
+
+[env:nodemcuv2]
+platform = espressif8266
+board = nodemcuv2
+framework = arduino
+```
+
+Teniendo en cuenta que el puerto de trabajo será el ```ttyUSB0``` (para este ejemplo) y la velocidad serial será de 9800 bps. Se agregaron las siguientes líneas en el archivo de configuración (para más información de como configurar el monitor serial puede consultar el enlace [Monitor Options](https://docs.platformio.org/en/latest/projectconf/section_env_monitor.html)):
+
+
+```ini
+; PlatformIO Project Configuration File
+;
+;   Build options: build flags, source filter
+;   Upload options: custom upload port, speed and extra flags
+;   Library options: dependencies, extra library storages
+;   Advanced options: extra scripting
+;
+; Please visit documentation for the other options and examples
+; https://docs.platformio.org/page/projectconf.html
+
+[env:nodemcuv2]
+platform = espressif8266
+board = nodemcuv2
+framework = arduino
+
+; Custom Serial Monitor port
+monitor_port = /dev/ttyUSB0
+
+; Custom Serial Monitor speed (baud rate)
+monitor_speed = 9600
+```
+
+De este modo el archivo platformio.ini queda así:
+
+![fig11](platformio12.jpg)
+
+Una vez hecho esto, el paso siguiente consistirá en subir el código al NodeMCU (```CTRL + ALT + u``` en linux). 
+
+De este modo solo resta probar en el monitor serial, para ello se da click en el botón resaltado (o se ejecuta la combinación de teclas ```CTRL + ALT + s```) en la siguiente figura:
+
+![fig12](platformio13.jpg)
+
+Finalmente, una vez llamado el monitor serial, se hace un reset del NodeMCU y se ejecuta la aplicación de acuerdo a la lógica programada:
+
+![fig13](platformio14.jpg)
+
+ Cuando culmine la prueba con la combinación de letras ```CTRL + C``` puede salir del monitor serial. 
+
+ 
