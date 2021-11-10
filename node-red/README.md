@@ -28,3 +28,9 @@ node-red
 Como la editor de Node-RED se ejecuta en el browser, se debe colocar la dirección http://127.0.0.1:1880 para acceder a esta y poder asi usarla tal y como se muestra en la siguiente figura:
 
 
+* **Fecha**: 07/11/2021
+
+Ejemplos:
+1. https://nodered.org/docs/faq/interacting-with-arduino
+   
+   
