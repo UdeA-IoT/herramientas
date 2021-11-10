@@ -61,7 +61,8 @@ Como se muestra en la figura anterior, se despliega una ventana que informa la o
 
 ![image7](images/paleta6.jpg)
 
-Un tutorial muy bueno para profundizar y cacharrear en el manejo de Node-RED se encuentra en la pagina: http://noderedguide.com/.
+Un tutorial muy bueno para profundizar y cacharrear en el manejo de Node-RED se encuentra en la pagina: http://noderedguide.com/. Asi mismo, el siguiente enlace tambien contiene información de bastante utilidad: https://knolleary.net/node-red-workshop-photobooth/
+
 
 Antes de continuar, desarrolle la siguiente actividad.
 
@@ -71,19 +72,20 @@ Instalar la libreria **node-red-dashboard** y verificar que esta se muestre.
 
 ## Primeros ejemplos de prueba
 
-A continuación se van a realizar dos ejemplos en los cuales se va a mostrar como se puede comunicar serialmente un modulo NodeMCU con Node-RED
+A continuación se van a realizar dos ejemplos en los cuales se va a mostrar como se puede comunicar serialmente un modulo NodeMCU con Node-RED.
 
 
 
 
 ## Referencias
 
-1. https://nodered.org/docs/faq/interacting-with-arduino
-2. http://support.elmark.com.pl/advantech/icom/routery/moduly_uzytkownika/Node.js/node-red-application-note-20200618.pdf
-3. https://knolleary.net/node-red-workshop-photobooth/pdf/node-red-workshop-photobooth.pdf
-4. https://www.snap4city.org/download/video/Node-RED_dashboard_user_manual.pdf
-5. https://tech.ebu.ch/docs/events/opensource17/presentations/Streampunk.pdf
-6. https://developer.cisco.com/meraki/build/node-red-getting-started-with-cisco-meraki-apis/
-7. https://ibmcloud-watson-day.mybluemix.net/files/Lab.Node-RED-SocialDashboard.pdf
+1. https://knolleary.net/node-red-workshop-photobooth/
+2. https://nodered.org/docs/faq/interacting-with-arduino
+3. http://support.elmark.com.pl/advantech/icom/routery/moduly_uzytkownika/Node.js/node-red-application-note-20200618.pdf
+4. https://knolleary.net/node-red-workshop-photobooth/pdf/node-red-workshop-photobooth.pdf
+5. https://www.snap4city.org/download/video/Node-RED_dashboard_user_manual.pdf
+6. https://tech.ebu.ch/docs/events/opensource17/presentations/Streampunk.pdf
+7. https://developer.cisco.com/meraki/build/node-red-getting-started-with-cisco-meraki-apis/
+8. https://ibmcloud-watson-day.mybluemix.net/files/Lab.Node-RED-SocialDashboard.pdf
    
    
